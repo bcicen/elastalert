@@ -1145,10 +1145,9 @@ class TwilioAlerter(Alerter):
             try:
                 client.messages.create(body=self.rule['name'], to=number,
                                        from_=self.twilio_from_number)
-            elastalert_logger.info("Trigger sent to Twilio for %s" % number)
-
+                elastalert_logger.info("Trigger sent to Twilio for %s" % number)
             except TwilioRestException as e:
-                elastalert_logger.error("error posting to twilio: %s" % e)
+                raise EAException("error posting to twilio: %s" % e)
 
     def get_info(self):
         return {'type': 'twilio',
