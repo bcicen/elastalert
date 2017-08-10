@@ -242,7 +242,7 @@ properties:
   ### Twilio
   twilio_account_sid: {type: string}
   twilio_auth_token: {type: string}
-  twilio_to_number: {type: string}
+  twilio_to_numbers: *arrayOfString
   twilio_from_number: {type: string}
 
   ### VictorOps

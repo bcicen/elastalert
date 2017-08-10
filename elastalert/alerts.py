@@ -1129,27 +1129,26 @@ class ExotelAlerter(Alerter):
 
 
 class TwilioAlerter(Alerter):
-    required_options = frozenset(['twilio_account_sid', 'twilio_auth_token', 'twilio_to_number', 'twilio_from_number'])
+    required_options = frozenset(['twilio_account_sid', 'twilio_auth_token', 'twilio_to_numbers', 'twilio_from_number'])
 
     def __init__(self, rule):
         super(TwilioAlerter, self).__init__(rule)
         self.twilio_account_sid = self.rule['twilio_account_sid']
         self.twilio_auth_token = self.rule['twilio_auth_token']
-        self.twilio_to_number = self.rule['twilio_to_number']
+        self.twilio_to_numbers = self.rule['twilio_to_numbers']
         self.twilio_from_number = self.rule['twilio_from_number']
 
     def alert(self, matches):
         client = TwilioClient(self.twilio_account_sid, self.twilio_auth_token)
 
-        try:
-            client.messages.create(body=self.rule['name'],
-                                   to=self.twilio_to_number,
-                                   from_=self.twilio_from_number)
+        for number in self.twilio_to_numbers:
+            try:
+                client.messages.create(body=self.rule['name'], to=number,
+                                       from_=self.twilio_from_number)
+            elastalert_logger.info("Trigger sent to Twilio for %s" % number)
 
-        except TwilioRestException as e:
-            raise EAException("Error posting to twilio: %s" % e)
-
-        elastalert_logger.info("Trigger sent to Twilio")
+            except TwilioRestException as e:
+                elastalert_logger.error("error posting to twilio: %s" % e)
 
     def get_info(self):
         return {'type': 'twilio',

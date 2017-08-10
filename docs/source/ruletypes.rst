@@ -1532,7 +1532,7 @@ The alerter requires the following option:
 
 ``twilio_auth_token``: Auth token assosiated with your twilio account.
 
-``twilio_to_number``: The phone number where you would like send the notification.
+``twilio_to_numbers``: List of phone numbers where you would like send the notification.
 
 ``twilio_from_number``: Your twilio phone number from which message will be sent.
 
