@@ -1139,11 +1139,12 @@ class TwilioAlerter(Alerter):
         self.twilio_from_number = self.rule['twilio_from_number']
 
     def alert(self, matches):
+        body = self.create_alert_body(matches)
         client = TwilioClient(self.twilio_account_sid, self.twilio_auth_token)
 
         for number in self.twilio_to_numbers:
             try:
-                client.messages.create(body=self.rule['name'], to=number,
+                client.messages.create(body=body, to=number,
                                        from_=self.twilio_from_number)
                 elastalert_logger.info("Trigger sent to Twilio for %s" % number)
             except TwilioRestException as e:
